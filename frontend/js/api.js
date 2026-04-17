@@ -1,6 +1,11 @@
 const API = {
-    BASE_URL: 'http://localhost:5000/api/v1',
-    baseUrl: 'http://localhost:5000/api/v1', // Legacy support if needed
+    // Automatically switch between local development, Render (same-origin), and Vercel (cross-origin)
+    BASE_URL: (() => {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:5000/api/v1';
+        if (host.includes('vercel.app')) return 'https://elitequiz-0-1.onrender.com/api/v1';
+        return '/api/v1'; // Default for same-origin (Render)
+    })(),
 
     async request(endpoint, options = {}) {
         const url = `${this.BASE_URL}${endpoint}`;
